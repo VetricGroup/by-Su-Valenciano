@@ -31,7 +31,6 @@
         body {
             background-color: #030303;
             overflow-x: hidden;
-            max-width: 100vw;
         }
 
         /* --- ANIMACIONES DEL HERO --- */
@@ -167,10 +166,11 @@
         .sobre-section {
             background: #030303;
             padding: 120px 24px;
-            overflow: hidden;
         }
         .sobre-inner {
             max-width: 900px;
+            width: 100%;
+            box-sizing: border-box;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -178,10 +178,27 @@
             align-items: center;
         }
         @media (max-width: 768px) {
-            .sobre-inner { grid-template-columns: 1fr; gap: 48px; }
+            .sobre-section { padding: 80px 20px; }
+            .sobre-inner {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 40px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .sobre-inner > * {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                min-width: 0 !important;
+            }
         }
         .sobre-img-wrap {
             position: relative;
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
         }
         .sobre-img-wrap img {
             width: 100%;
@@ -190,6 +207,7 @@
             object-position: center center;
             border-radius: 4px;
             filter: grayscale(0.2) contrast(1.05);
+            display: block;
         }
         .sobre-img-wrap::before {
             content: '';
@@ -227,8 +245,11 @@
         }
         .sobre-social {
             display: flex;
+            flex-wrap: wrap;
             gap: 16px;
             margin-top: 32px;
+            width: 100%;
+            box-sizing: border-box;
         }
         .sobre-social a {
             font-size: 12px;
@@ -885,7 +906,7 @@
 
     <div class="relative min-h-screen w-full flex items-center justify-center bg-[#030303]" style="overflow:hidden;">
         
-        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" style="inset:-40px;"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl"></div>
 
         <div class="absolute inset-0 overflow-hidden" id="shapes-container"></div>
 
@@ -1005,7 +1026,7 @@
 
     <!-- ═══════════════════════════════════════ SOBRE MÍ ═══ -->
     <section id="sobre" class="reveal-section sobre-section">
-        <div class="sobre-inner">
+        <div class="sobre-inner" id="sobre-inner">
             <div class="sobre-img-wrap">
                 <img src="images/susana.png"
                      alt="Susana Valenciano, fotógrafa especialista en retratos en Costa Rica">
@@ -1201,8 +1222,8 @@
 
         // 3. Renderizar Figuras Geométricas del Hero
         const shapesData = [
-            { delay: 0.3, width: 600, height: 140, rotate: 12, gradient: "from-indigo-500/[0.15]", className: "left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]" },
-            { delay: 0.5, width: 500, height: 120, rotate: -15, gradient: "from-rose-500/[0.15]", className: "right-[-5%] md:right-[0%] top-[70%] md:top-[75%]" },
+            { delay: 0.3, width: 600, height: 140, rotate: 12, gradient: "from-indigo-500/[0.15]", className: "left-[-5%] top-[15%] md:top-[20%]" },
+            { delay: 0.5, width: 500, height: 120, rotate: -15, gradient: "from-rose-500/[0.15]", className: "right-[0%] top-[70%] md:top-[75%]" },
             { delay: 0.4, width: 300, height: 80, rotate: -8, gradient: "from-violet-500/[0.15]", className: "left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]" },
             { delay: 0.6, width: 200, height: 60, rotate: 20, gradient: "from-amber-500/[0.15]", className: "right-[15%] md:right-[20%] top-[10%] md:top-[15%]" },
             { delay: 0.7, width: 150, height: 40, rotate: -25, gradient: "from-cyan-500/[0.15]", className: "left-[20%] md:left-[25%] top-[5%] md:top-[10%]" }
@@ -1343,12 +1364,56 @@
             if (window.innerWidth <= 640) {
                 document.querySelectorAll('.shape-inner').forEach(el => {
                     const w = parseInt(el.style.width);
-                    if (w > window.innerWidth * 0.85) {
-                        el.style.width = Math.round(window.innerWidth * 0.75) + 'px';
+                    if (w > window.innerWidth * 0.7) {
+                        el.style.width = Math.round(window.innerWidth * 0.65) + 'px';
                     }
                 });
             }
         })();
+    </script>
+
+    <script>
+    // FIX INMEDIATO SOBRE MOBILE
+    if (window.innerWidth <= 768) {
+        document.addEventListener('DOMContentLoaded', function() {
+            var inner = document.getElementById('sobre-inner');
+            if (inner) {
+                inner.style.cssText = 'display:flex!important;flex-direction:column!important;gap:40px!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;';
+                Array.from(inner.children).forEach(function(child) {
+                    child.style.cssText = 'width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;';
+                });
+            }
+        });
+    }
+    </script>
+
+    <script>
+    // DIAGNÓSTICO DE OVERFLOW
+    (function diagnoseOverflow() {        const vw = document.documentElement.clientWidth;
+        const offenders = [];
+        document.querySelectorAll('*').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.right > vw + 1) {
+                const tag = el.tagName.toLowerCase();
+                const id = el.id ? '#' + el.id : '';
+                const cls = el.className && typeof el.className === 'string'
+                    ? '.' + el.className.trim().split(/\s+/).slice(0,3).join('.')
+                    : '';
+                offenders.push(`${tag}${id}${cls} → right:${Math.round(rect.right)}px`);
+            }
+        });
+        const box = document.createElement('div');
+        box.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:99999;color:#fff;font-size:11px;padding:10px;max-height:50vh;overflow-y:auto;font-family:monospace;';
+        if (offenders.length) {
+            box.style.background = 'rgba(200,0,0,0.95)';
+            box.innerHTML = '<strong>OVERFLOW (vw:' + vw + '):</strong><br>' + offenders.join('<br>');
+        } else {
+            box.style.background = 'rgba(0,150,0,0.9)';
+            box.textContent = '✓ Sin overflow — vw:' + vw;
+            setTimeout(() => box.remove(), 5000);
+        }
+        document.body.appendChild(box);
+    })();
     </script>
 </body>
 </html>
