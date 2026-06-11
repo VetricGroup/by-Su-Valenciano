@@ -1387,33 +1387,6 @@
     }
     </script>
 
-    <script>
-    // DIAGNÓSTICO DE OVERFLOW
-    (function diagnoseOverflow() {        const vw = document.documentElement.clientWidth;
-        const offenders = [];
-        document.querySelectorAll('*').forEach(el => {
-            const rect = el.getBoundingClientRect();
-            if (rect.right > vw + 1) {
-                const tag = el.tagName.toLowerCase();
-                const id = el.id ? '#' + el.id : '';
-                const cls = el.className && typeof el.className === 'string'
-                    ? '.' + el.className.trim().split(/\s+/).slice(0,3).join('.')
-                    : '';
-                offenders.push(`${tag}${id}${cls} → right:${Math.round(rect.right)}px`);
-            }
-        });
-        const box = document.createElement('div');
-        box.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:99999;color:#fff;font-size:11px;padding:10px;max-height:50vh;overflow-y:auto;font-family:monospace;';
-        if (offenders.length) {
-            box.style.background = 'rgba(200,0,0,0.95)';
-            box.innerHTML = '<strong>OVERFLOW (vw:' + vw + '):</strong><br>' + offenders.join('<br>');
-        } else {
-            box.style.background = 'rgba(0,150,0,0.9)';
-            box.textContent = '✓ Sin overflow — vw:' + vw;
-            setTimeout(() => box.remove(), 5000);
-        }
-        document.body.appendChild(box);
-    })();
-    </script>
+
 </body>
 </html>
