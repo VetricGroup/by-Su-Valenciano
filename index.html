@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>by Su Valenciano — Fotografía Retratos CR</title>
+    <meta name="description" content="Fotografía de retratos en Costa Rica. Especialista en retratos personales, maternidad, bodas, corporativa y niños. Susana Valenciano.">
+    <meta name="keywords" content="fotografía retratos, maternidad, bodas, corporativa, kids, Susana Valenciano, Costa Rica">
+    <meta property="og:title" content="by Su Valenciano — Fotografía Retratos CR">
+    <meta property="og:description" content="Retratos que elevan tu imagen. Maternidad, bodas, corporativa y más en Costa Rica.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="images/preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="by Su Valenciano — Fotografía Retratos CR">
+    <meta name="twitter:description" content="Fotografía de retratos en Costa Rica: retratos, maternidad, bodas, corporativa y niños.">
+    <link rel="canonical" href="https://portraitscr.com">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23030303'/%3E%3Cellipse cx='16' cy='16' rx='5' ry='10' fill='none' stroke='%23ffffff' stroke-width='1.2' transform='rotate(-35 16 16)'/%3E%3Cline x1='16' y1='6' x2='16' y2='26' stroke='%23ffffff' stroke-width='0.8' transform='rotate(-35 16 16)'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23030303'/%3E%3Cellipse cx='16' cy='16' rx='5' ry='10' fill='none' stroke='%23ffffff' stroke-width='1.2' transform='rotate(-35 16 16)'/%3E%3Cline x1='16' y1='6' x2='16' y2='26' stroke='%23ffffff' stroke-width='0.8' transform='rotate(-35 16 16)'/%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
+    <style>
+        body {
+            background-color: #030303;
+            overflow-x: hidden;
+        }
+
+        /* --- ANIMACIONES DEL HERO --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes floatElement {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(15px); }
+        }
+
+        @keyframes shapeEntrance {
+            from { opacity: 0; transform: translateY(-150px) rotate(var(--base-rotate-init)); }
+            to { opacity: 1; transform: translateY(0) rotate(var(--base-rotate)); }
+        }
+
+        .animate-fade-up {
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.25, 0.4, 0.25, 1) forwards;
+        }
+
+        .shape-container {
+            position: absolute;
+            opacity: 0;
+            animation: shapeEntrance 2.4s cubic-bezier(0.23, 0.86, 0.39, 0.96) forwards;
+        }
+
+        .shape-inner {
+            position: relative;
+            animation: floatElement 12s ease-in-out infinite;
+        }
+
+        .glass-shape {
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            background-image: linear-gradient(to right, var(--tw-gradient-stops));
+            backdrop-filter: blur(2px);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-shape::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2), transparent 70%);
+        }
+
+        /* --- NAVBAR --- */
+        #navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.4s ease, padding 0.4s ease, backdrop-filter 0.4s ease;
+        }
+        #navbar.scrolled {
+            background: rgba(3, 3, 3, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 14px 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-logo {
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+        .nav-links a {
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.45);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: rgba(255,255,255,0.9); }
+        .nav-cta {
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.9) !important;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 18px;
+            border-radius: 999px;
+            transition: background 0.2s, border-color 0.2s !important;
+        }
+        .nav-cta:hover {
+            background: rgba(255,255,255,0.08) !important;
+            border-color: rgba(255,255,255,0.4) !important;
+        }
+        @media (max-width: 640px) {
+            .nav-links { gap: 16px; }
+            .nav-links .nav-hide-sm { display: none; }
+            #navbar { padding: 16px 20px; }
+        }
+
+        /* --- FLOATING WHATSAPP --- */
+        #floating-wa {
+            position: fixed;
+            bottom: 28px; right: 28px;
+            z-index: 200;
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: #25D366;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+        #floating-wa:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 28px rgba(37,211,102,0.55);
+        }
+        #floating-wa svg { width: 26px; height: 26px; fill: white; }
+
+        /* --- SECCIÓN SOBRE --- */
+        .sobre-section {
+            background: #030303;
+            padding: 120px 24px;
+        }
+        .sobre-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .sobre-inner { grid-template-columns: 1fr; gap: 48px; }
+        }
+        .sobre-img-wrap {
+            position: relative;
+        }
+        .sobre-img-wrap img {
+            width: 100%;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+            object-position: center center;
+            border-radius: 4px;
+            filter: grayscale(0.2) contrast(1.05);
+        }
+        .sobre-img-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -12px -12px 12px 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+        .sobre-tag {
+            display: inline-block;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 24px;
+        }
+        .sobre-heading {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 300;
+            color: rgba(255,255,255,0.92);
+            line-height: 1.25;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+        .sobre-text {
+            font-size: 15px;
+            line-height: 1.85;
+            color: rgba(255,255,255,0.4);
+            font-weight: 300;
+            margin-bottom: 16px;
+        }
+        .sobre-social {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+        .sobre-social a {
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+        .sobre-social a:hover { color: rgba(255,255,255,0.9); }
+        .sobre-social svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+        /* --- SECCIÓN TESTIMONIOS --- */
+        .testimonios-section {
+            background: #030303;
+            padding: 80px 24px 100px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .testimonios-inner {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .testimonios-label {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.25);
+            text-align: center;
+            margin-bottom: 56px;
+        }
+        .testimonios-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        @media (max-width: 768px) {
+            .testimonios-grid { grid-template-columns: 1fr; gap: 24px; }
+        }
+        .testimonio-card {
+            padding: 32px 28px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.015);
+            transition: border-color 0.3s;
+        }
+        .testimonio-card:hover { border-color: rgba(255,255,255,0.12); }
+        .testimonio-stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+        .testimonio-stars span {
+            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+        }
+        .testimonio-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.45);
+            font-weight: 300;
+            font-style: italic;
+            margin-bottom: 24px;
+        }
+        .testimonio-author {
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* --- SECCIÓN CONTACTO --- */
+        .contacto-section {
+            background: #030303;
+            padding: 100px 24px 120px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .contacto-inner {
+            max-width: 680px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .contacto-tag {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.25);
+            display: block;
+            margin-bottom: 24px;
+        }
+        .contacto-heading {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 300;
+            color: rgba(255,255,255,0.92);
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+        .contacto-sub {
+            font-size: 15px;
+            color: rgba(255,255,255,0.35);
+            line-height: 1.7;
+            font-weight: 300;
+            margin-bottom: 52px;
+        }
+        .contacto-btns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+        .btn-wa {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 36px;
+            background: #25D366;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 999px;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 24px rgba(37,211,102,0.25);
+        }
+        .btn-wa:hover {
+            background: #1ebe5a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(37,211,102,0.35);
+        }
+        .btn-wa svg { width: 20px; height: 20px; fill: white; flex-shrink: 0; }
+        .btn-ig {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            background: transparent;
+            color: rgba(255,255,255,0.45);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 999px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .btn-ig:hover {
+            color: rgba(255,255,255,0.85);
+            border-color: rgba(255,255,255,0.3);
+        }
+        .btn-ig svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+        /* --- FOOTER --- */
+        .footer {
+            background: #030303;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding: 36px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer-logo {
+            font-size: 13px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+        }
+        .footer-copy {
+            font-size: 12px;
+            color: rgba(255,255,255,0.18);
+        }
+        .footer-social {
+            display: flex;
+            gap: 20px;
+        }
+        .footer-social a {
+            color: rgba(255,255,255,0.25);
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+        .footer-social a:hover { color: rgba(255,255,255,0.7); }
+        .footer-social svg { width: 18px; height: 18px; display: block; }
+
+        /* --- SPLIT SCROLL STORIES --- */
+        #split-stories-root { position: relative; }
+
+        .split-page {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        .split-page.is-active { pointer-events: auto; z-index: 2; }
+
+        /* Left half */
+        .split-left {
+            position: absolute;
+            top: 0; left: 0;
+            width: 50%; height: 100%;
+            transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
+            overflow: hidden;
+        }
+        /* Right half */
+        .split-right {
+            position: absolute;
+            top: 0; left: 50%;
+            width: 50%; height: 100%;
+            transition: transform 1s cubic-bezier(0.76, 0, 0.24, 1);
+            overflow: hidden;
+        }
+
+        /* INACTIVE: halves are off-screen */
+        .split-page .split-left  { transform: translateY(100%); }
+        .split-page .split-right { transform: translateY(-100%); }
+
+        /* ACTIVE: both halves slide in */
+        .split-page.is-active .split-left  { transform: translateY(0); }
+        .split-page.is-active .split-right { transform: translateY(0); }
+
+        /* BG image fill */
+        .split-bg {
+            width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .split-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+        }
+
+        /* Solid dark half (no image) */
+        .split-solid {
+            width: 100%; height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+        }
+
+        /* Content inside halves */
+        .split-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 380px;
+        }
+        .split-content .sc-num {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 0.25em;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .split-content .sc-title {
+            font-size: clamp(28px, 3.5vw, 52px);
+            font-weight: 300;
+            color: rgba(255,255,255,0.92);
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 14px;
+        }
+        .split-content .sc-role {
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.35);
+        }
+        .split-content .sc-line {
+            width: 40px;
+            height: 1px;
+            background: rgba(255,255,255,0.2);
+            margin: 24px auto 0;
+        }
+
+        /* Dot nav */
+        #split-dots .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        #split-dots .dot.active {
+            background: rgba(255,255,255,0.85);
+            transform: scale(1.4);
+        }
+
+        /* Counter */
+        #split-counter {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            color: rgba(255,255,255,0.25);
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        /* Scroll hint arrow */
+        #split-hint-down {
+            position: absolute;
+            bottom: 28px;
+            right: 50%;
+            transform: translateX(50%);
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255,255,255,0.2);
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+        #split-hint-down svg {
+            width: 18px; height: 18px;
+            animation: bounceDown 2s ease-in-out infinite;
+        }
+        @keyframes bounceDown {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(5px); }
+        }
+
+        @media (max-width: 640px) {
+            .split-left, .split-right {
+                width: 100%;
+                left: 0;
+                height: 50%;
+            }
+            .split-right { top: 50%; left: 0; }
+            .split-page .split-left  { transform: translateX(-100%); }
+            .split-page .split-right { transform: translateX(100%); }
+            .split-page.is-active .split-left,
+            .split-page.is-active .split-right { transform: translateX(0); }
+        }
+
+
+        /* --- ACORDEÓN DE SERVICIOS --- */
+        .accordion-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+        .accordion-items {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            min-height: 420px;
+        }
+        .acc-item {
+            position: relative;
+            height: 420px;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: width 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+            flex-shrink: 0;
+        }
+        .acc-item img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .acc-item .acc-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            transition: background 0.4s;
+        }
+        .acc-item:hover .acc-overlay,
+        .acc-item.active .acc-overlay {
+            background: rgba(0,0,0,0.3);
+        }
+        .acc-label {
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            color: rgba(255,255,255,0.9);
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            transition: all 0.35s ease;
+            pointer-events: none;
+        }
+        /* collapsed: rotated vertical label */
+        .acc-item:not(.active) .acc-label {
+            transform: translateX(-50%) rotate(90deg);
+            bottom: auto;
+            top: 50%;
+            transform-origin: center center;
+            transform: translateX(-50%) translateY(-50%) rotate(90deg);
+            left: 50%;
+        }
+        /* expanded: horizontal label at bottom */
+        .acc-item.active .acc-label {
+            transform: translateX(-50%);
+            bottom: 28px;
+            top: auto;
+        }
+        /* Sub-description shown only when active */
+        .acc-desc {
+            position: absolute;
+            bottom: 60px;
+            left: 0; right: 0;
+            text-align: center;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            opacity: 0;
+            transition: opacity 0.4s 0.2s;
+        }
+        .acc-item.active .acc-desc {
+            opacity: 1;
+        }
+        @media (max-width: 768px) {
+            .accordion-items {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .acc-item {
+                width: 100% !important;
+                height: 80px !important;
+                transition: height 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+            }
+            .acc-item.active {
+                height: 320px !important;
+            }
+            .acc-item:not(.active) .acc-label {
+                transform: translateX(-50%);
+                top: auto;
+                bottom: 22px;
+                left: 50%;
+            }
+        }
+
+        /* --- SECCIÓN CLIENTES / TESTIMONIOS --- */
+        .clientes-section {
+            background: #030303;
+            padding: 100px 24px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .clientes-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .clientes-inner { grid-template-columns: 1fr; gap: 60px; }
+        }
+        .clientes-left {
+            position: sticky;
+            top: 80px;
+        }
+        .clientes-tag-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            padding: 5px 14px;
+            border-radius: 999px;
+            margin-bottom: 28px;
+        }
+        .clientes-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            flex-shrink: 0;
+        }
+        .clientes-tag-text {
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            color: rgba(255,255,255,0.45);
+        }
+        .clientes-heading {
+            font-size: clamp(28px, 3.5vw, 44px);
+            font-weight: 300;
+            color: rgba(255,255,255,0.92);
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+        .clientes-heading em {
+            font-style: italic;
+            color: rgba(255,255,255,0.65);
+        }
+        .clientes-desc {
+            font-size: 15px;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.38);
+            font-weight: 300;
+            margin-bottom: 36px;
+        }
+        .clientes-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px;
+            padding: 20px 12px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.9);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .stat-label {
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.3);
+        }
+        .clientes-btns {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        /* right column: stacking cards */
+        .clientes-right {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .testi-card {
+            position: sticky;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 28px 24px;
+            transition: border-color 0.3s;
+        }
+        .testi-card:hover { border-color: rgba(255,255,255,0.15); }
+        .testi-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .testi-avatar {
+            width: 52px; height: 52px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+        .testi-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+        }
+        .testi-title {
+            font-size: 12px;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.04em;
+        }
+        .testi-stars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .testi-rating {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.85);
+        }
+        .stars {
+            font-size: 14px;
+            color: #facc15;
+            letter-spacing: 2px;
+        }
+        .testi-quote {
+            font-size: 14px;
+            line-height: 1.75;
+            color: rgba(255,255,255,0.42);
+            font-style: italic;
+            font-weight: 300;
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- NAVBAR -->
+    <nav id="navbar">
+        <a href="#" class="nav-logo" style="display:flex;align-items:center;">
+            <img src="images/logo.png" alt="by Su Valenciano — Fotografía Retratos CR"
+                 style="height:42px; width:auto; display:block; filter: brightness(0) invert(1);"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <span style="display:none; color:white; font-size:15px; letter-spacing:0.12em; text-transform:uppercase;">by Su Valenciano</span>
+        </a>
+        <div class="nav-links">
+            <a href="#sobre" class="nav-hide-sm">Sobre nosotros</a>
+            <a href="#scroll-wall-root" class="nav-hide-sm">Servicios</a>
+            <a href="#contacto" class="nav-cta">Contacto</a>
+        </div>
+    </nav>
+
+    <!-- WHATSAPP FLOTANTE -->
+    <a id="floating-wa" href="https://wa.me/50684259267" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <div class="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#030303]">
+        
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl"></div>
+
+        <div class="absolute inset-0 overflow-hidden" id="shapes-container"></div>
+
+        <div class="relative z-10 container mx-auto px-4 md:px-6">
+            <div class="max-w-3xl mx-auto text-center">
+                
+                <div id="hero-badge" class="animate-fade-up inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] mb-8 md:mb-12" style="animation-delay: 0.5s;">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    <span class="text-sm text-white/60 tracking-wide" id="badge-text"></span>
+                </div>
+
+                <div class="animate-fade-up mb-6 md:mb-8" style="animation-delay: 0.7s;">
+                    <h1 class="text-4xl sm:text-6xl md:text-8xl font-bold tracking-tight">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80" id="title-1"></span>
+                        <br />
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-white/90 to-rose-300" id="title-2"></span>
+                    </h1>
+                </div>
+
+                <div class="animate-fade-up" style="animation-delay: 0.9s;">
+                    <p class="text-base sm:text-lg md:text-xl text-white/40 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4" id="subtitle-text"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80 pointer-events-none"></div>
+    </div>
+
+
+    <!-- ══════════════════════════════════ SERVICIOS ACORDEÓN ═══ -->
+    <section id="scroll-wall-root" class="relative w-full bg-[#030303] text-white py-24 px-4">
+
+        <div class="flex flex-col items-center text-center mb-16">
+            <span class="text-xs uppercase tracking-[0.25em] text-white/25 mb-6">Servicios</span>
+            <h2 class="text-5xl sm:text-7xl md:text-8xl font-extralight tracking-tighter uppercase">Lo que hago</h2>
+            <p class="mt-4 text-xs uppercase tracking-[0.4em] text-white/30 font-light">Pasa el cursor sobre cada servicio</p>
+        </div>
+
+        <div class="accordion-wrap">
+            <div class="accordion-items" id="accordion-items">
+
+                <!-- =====================================================
+                     ACORDEÓN DE SERVICIOS — editar aquí fácilmente
+                     Para cambiar una foto: reemplaza el src="" de <img>
+                     Para cambiar el título: edita el texto en <span class="acc-label">
+                     Para cambiar la etiqueta: edita el texto en <span class="acc-desc">
+                     ===================================================== -->
+
+                <!-- SERVICIO 1: Retratos -->
+                <div class="acc-item active">
+                    <img
+                        src="images/retratos.png"
+                        alt="Fotografía de retratos"
+                        loading="lazy"
+                    >
+                    <div class="acc-overlay"></div>
+                    <span class="acc-desc">Tu mejor versión</span>
+                    <span class="acc-label">Retratos</span>
+                </div>
+
+                <!-- SERVICIO 2: Maternidad -->
+                <div class="acc-item">
+                    <img
+                        src="images/maternidad.png"
+                        alt="Fotografía de maternidad"
+                        loading="lazy"
+                    >
+                    <div class="acc-overlay"></div>
+                    <span class="acc-desc">Tu embarazo con estilo</span>
+                    <span class="acc-label">Maternidad</span>
+                </div>
+
+                <!-- SERVICIO 3: Bodas -->
+                <div class="acc-item">
+                    <img
+                        src="images/bodas.png"
+                        alt="Fotografía de bodas"
+                        loading="lazy"
+                    >
+                    <div class="acc-overlay"></div>
+                    <span class="acc-desc">Mi estudio en tu boda</span>
+                    <span class="acc-label">Bodas</span>
+                </div>
+
+                <!-- SERVICIO 4: Corporativa -->
+                <div class="acc-item">
+                    <img
+                        src="images/corporativa.png"
+                        alt="Fotografía corporativa"
+                        loading="lazy"
+                    >
+                    <div class="acc-overlay"></div>
+                    <span class="acc-desc">Elevo tu imagen</span>
+                    <span class="acc-label">Corporativa</span>
+                </div>
+
+                <!-- SERVICIO 5: Kids -->
+                <div class="acc-item">
+                    <img
+                        src="images/kids.png"
+                        alt="Fotografía infantil"
+                        loading="lazy"
+                    >
+                    <div class="acc-overlay"></div>
+                    <span class="acc-desc">Familias y niños</span>
+                    <span class="acc-label">Kids</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div style="display:flex;justify-content:center;margin-top:64px;">
+            <a href="#contacto" class="btn-wa" style="text-decoration:none;">Reservar sesión</a>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════ SOBRE MÍ ═══ -->
+    <section id="sobre" class="sobre-section">
+        <div class="sobre-inner">
+            <div class="sobre-img-wrap">
+                <img src="images/susana.png"
+                     alt="Susana Valenciano, fotógrafa especialista en retratos en Costa Rica">
+            </div>
+            <div>
+                <span class="sobre-tag">Sobre Susana</span>
+                <h2 class="sobre-heading">Cada retrato es una ventana a tu mejor versión.</h2>
+                <p class="sobre-text">Soy Susana Valenciano, fotógrafa y creadora de <em style="color:rgba(255,255,255,0.65); font-style:italic;">by Su Valenciano</em>, un espacio dedicado a capturar la esencia de cada persona con autenticidad y estilo. Desde Costa Rica, me especializo en retratos personales, maternidad, bodas, imagen corporativa y sesiones infantiles.</p>
+                <p class="sobre-text">Mi misión es que te sientas cómoda frente al lente y que el resultado te enamore: imágenes que reflejan quién sos y que vas a querer guardar para siempre.</p>
+                <div class="sobre-social">
+                    <a href="https://www.instagram.com/portrait_sessions_cr?igsh=MWNpdWRybTIyOHM5bg==" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        portrait_sessions_cr
+                    </a>
+                    <a href="https://www.instagram.com/portrait_lifetime_sessions?igsh=MWY5bmZlNjg3b3pqYg==" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        portrait_lifetime_sessions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════ CLIENTES / STATS ═══ -->
+    <section id="clientes" class="clientes-section">
+        <div class="clientes-inner">
+
+            <!-- LEFT: sticky info -->
+            <div class="clientes-left">
+                <div class="clientes-tag-wrap">
+                    <span class="clientes-dot"></span>
+                    <span class="clientes-tag-text">Clientes satisfechos</span>
+                </div>
+                <h2 class="clientes-heading">Retratos que se convierten en <em>recuerdos que duran toda la vida.</em></h2>
+                <p class="clientes-desc">Desde retratos personales hasta sesiones corporativas y de familia, acompaño a mis clientes en Costa Rica con dedicación, calidez y un ojo para los detalles que marcan la diferencia.</p>
+
+                <div class="clientes-stats">
+                    <div class="stat-card">
+                        <p class="stat-value">5★</p>
+                        <p class="stat-label">Satisfacción de clientes</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-value">5+</p>
+                        <p class="stat-label">Tipos de sesión</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-value">CR</p>
+                        <p class="stat-label">Costa Rica</p>
+                    </div>
+                </div>
+
+                <div class="clientes-btns">
+                    <a href="https://www.instagram.com/portrait_sessions_cr?igsh=MWNpdWRybTIyOHM5bg==" target="_blank" rel="noopener" class="btn-ig">Ver galería en Instagram</a>
+                    <a href="#contacto" class="btn-wa" style="text-decoration:none;padding:12px 28px;font-size:13px;">Reservar sesión</a>
+                </div>
+            </div>
+
+            <!-- RIGHT: sticky testimonial cards -->
+            <div class="clientes-right">
+
+                <div class="testi-card" style="top:80px;">
+                    <div class="testi-header">
+                        <div class="testi-avatar"></div>
+                        <div>
+                            <p class="testi-name">Andrea M.</p>
+                            <p class="testi-title">Sesión de Retratos</p>
+                        </div>
+                    </div>
+                    <div class="testi-stars">
+                        <span class="testi-rating">5.0</span>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                    <p class="testi-quote">"Susana logró capturar exactamente cómo me quiero ver. Me hizo sentir cómoda desde el primer momento y las fotos quedaron increíbles. ¡Totalmente recomendada!"</p>
+                </div>
+
+                <div class="testi-card" style="top:110px;">
+                    <div class="testi-header">
+                        <div class="testi-avatar"></div>
+                        <div>
+                            <p class="testi-name">Valeria R.</p>
+                            <p class="testi-title">Sesión de Maternidad</p>
+                        </div>
+                    </div>
+                    <div class="testi-stars">
+                        <span class="testi-rating">5.0</span>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                    <p class="testi-quote">"Mi sesión de maternidad fue un sueño. Susana tiene un talento especial para hacer que te sientas hermosa y segura. Las fotos son un tesoro para siempre."</p>
+                </div>
+
+                <div class="testi-card" style="top:140px;">
+                    <div class="testi-header">
+                        <div class="testi-avatar"></div>
+                        <div>
+                            <p class="testi-name">Karla S.</p>
+                            <p class="testi-title">Sesión Corporativa</p>
+                        </div>
+                    </div>
+                    <div class="testi-stars">
+                        <span class="testi-rating">5.0</span>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                    <p class="testi-quote">"Necesitaba fotos profesionales para mi marca personal y el resultado superó todas mis expectativas. Susana entiende exactamente la imagen que querés proyectar."</p>
+                </div>
+
+                <div class="testi-card" style="top:170px;">
+                    <div class="testi-header">
+                        <div class="testi-avatar"></div>
+                        <div>
+                            <p class="testi-name">Daniela y Pablo</p>
+                            <p class="testi-title">Fotografía de Boda</p>
+                        </div>
+                    </div>
+                    <div class="testi-stars">
+                        <span class="testi-rating">5.0</span>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                    <p class="testi-quote">"Susana capturó cada emoción de nuestra boda con una sensibilidad única. Las fotos cuentan nuestra historia de una manera que nos emociona cada vez que las vemos."</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <section id="contacto" class="contacto-section">
+        <div class="contacto-inner">
+            <span class="contacto-tag">¿Agendamos?</span>
+            <h2 class="contacto-heading">Reservemos tu sesión especial.</h2>
+            <p class="contacto-sub">Contame sobre la sesión que tenés en mente — qué tipo buscás, la fecha y tus ideas. Te respondo en menos de 24 horas.</p>
+            <div class="contacto-btns">
+                <a href="https://wa.me/50684259267?text=Hola%20Susana!%20Me%20interesa%20saber%20más%20sobre%20tus%20servicios%20de%20fotografía%20%F0%9F%93%B7" target="_blank" rel="noopener" class="btn-wa">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    Escribirme por WhatsApp
+                </a>
+                <a href="https://www.instagram.com/portrait_sessions_cr?igsh=MWNpdWRybTIyOHM5bg==" target="_blank" rel="noopener" class="btn-ig">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    portrait_sessions_cr
+                </a>
+                <a href="https://www.instagram.com/portrait_lifetime_sessions?igsh=MWY5bmZlNjg3b3pqYg==" target="_blank" rel="noopener" class="btn-ig">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    portrait_lifetime_sessions
+                </a>
+                <a href="mailto:hello@portraitscr.com" class="btn-ig" style="margin-top:4px;">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    hello@portraitscr.com
+                </a>
+                <span class="btn-ig" style="margin-top:4px; cursor:default;">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                    Costa Rica
+                </span>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════ FOOTER ═══ -->
+    <footer class="footer">
+        <span class="footer-logo">by Su Valenciano</span>
+        <span class="footer-copy">© 2025 · Todos los derechos reservados</span>
+        <span class="footer-copy" style="font-size: 11px;">Creado por Vetric Group</span>
+        <div class="footer-social">
+            <a href="https://wa.me/50684259267" target="_blank" rel="noopener" aria-label="WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/portrait_sessions_cr?igsh=MWNpdWRybTIyOHM5bg==" target="_blank" rel="noopener" aria-label="portrait_sessions_cr Instagram">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/portrait_lifetime_sessions?igsh=MWY5bmZlNjg3b3pqYg==" target="_blank" rel="noopener" aria-label="portrait_lifetime_sessions Instagram">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+        </div>
+    </footer>
+
+
+    <script>
+        // 1. Registro de Plugin GSAP
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 2. Configuración de Textos del Hero
+        const config = {
+            badge: "by Su Valenciano · Fotografía Retratos CR",
+            title1: "Tu mejor",
+            title2: "versión.",
+            subtitle: "Fotografía de retratos en Costa Rica especializada en retratos personales, maternidad, bodas, imagen corporativa y niños. Cada sesión, una historia que merece ser contada."
+        };
+
+        document.getElementById('badge-text').innerText = config.badge;
+        document.getElementById('title-1').innerText = config.title1;
+        document.getElementById('title-2').innerText = config.title2;
+        document.getElementById('subtitle-text').innerText = config.subtitle;
+
+        // 3. Renderizar Figuras Geométricas del Hero
+        const shapesData = [
+            { delay: 0.3, width: 600, height: 140, rotate: 12, gradient: "from-indigo-500/[0.15]", className: "left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]" },
+            { delay: 0.5, width: 500, height: 120, rotate: -15, gradient: "from-rose-500/[0.15]", className: "right-[-5%] md:right-[0%] top-[70%] md:top-[75%]" },
+            { delay: 0.4, width: 300, height: 80, rotate: -8, gradient: "from-violet-500/[0.15]", className: "left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]" },
+            { delay: 0.6, width: 200, height: 60, rotate: 20, gradient: "from-amber-500/[0.15]", className: "right-[15%] md:right-[20%] top-[10%] md:top-[15%]" },
+            { delay: 0.7, width: 150, height: 40, rotate: -25, gradient: "from-cyan-500/[0.15]", className: "left-[20%] md:left-[25%] top-[5%] md:top-[10%]" }
+        ];
+
+        const shapesContainer = document.getElementById('shapes-container');
+        shapesData.forEach(shape => {
+            const shapeDiv = document.createElement('div');
+            shapeDiv.className = `shape-container ${shape.className}`;
+            shapeDiv.style.setProperty('--base-rotate', `${shape.rotate}deg`);
+            shapeDiv.style.setProperty('--base-rotate-init', `${shape.rotate - 15}deg`);
+            shapeDiv.style.animationDelay = `${shape.delay}s`;
+
+            const innerDiv = document.createElement('div');
+            innerDiv.className = 'shape-inner';
+            innerDiv.style.width = `${shape.width}px`;
+            innerDiv.style.height = `${shape.height}px`;
+
+            const glassDiv = document.createElement('div');
+            glassDiv.className = `glass-shape from-white/[0.08] ${shape.gradient}`;
+
+            innerDiv.appendChild(glassDiv);
+            shapeDiv.appendChild(innerDiv);
+            shapesContainer.appendChild(shapeDiv);
+        });
+
+        // 4. Acordeón de Servicios — solo interacción, el HTML está en el marcado estático
+        (function initAccordion() {
+            const EXPANDED  = 380; // px — ancho del panel activo (escritorio)
+            const COLLAPSED = 62;  // px — ancho del panel inactivo (escritorio)
+
+            const items = document.querySelectorAll('#accordion-items .acc-item');
+            if (!items.length) return;
+
+            function isMobile() { return window.innerWidth <= 768; }
+
+            function setActive(activeIndex) {
+                items.forEach((el, i) => {
+                    const isActive = i === activeIndex;
+                    el.classList.toggle('active', isActive);
+                    if (isMobile()) {
+                        el.style.width  = '100%';
+                        el.style.height = isActive ? '320px' : '80px';
+                    } else {
+                        el.style.width  = (isActive ? EXPANDED : COLLAPSED) + 'px';
+                        el.style.height = '';
+                    }
+                });
+            }
+
+            // Set initial widths on desktop
+            setActive(0);
+
+            // Events
+            items.forEach((el, i) => {
+                el.addEventListener('mouseenter', () => setActive(i));
+                el.addEventListener('click',      () => setActive(i));
+            });
+
+            window.addEventListener('resize', () => {
+                const current = [...items].findIndex(el => el.classList.contains('active'));
+                setActive(current >= 0 ? current : 0);
+            });
+        })();
+
+        // 7. Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 60) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }, { passive: true });
+
+        // 8. Smooth scroll para los links del navbar
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
